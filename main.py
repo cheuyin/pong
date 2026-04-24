@@ -10,7 +10,8 @@ def main():
     clock = pygame.time.Clock()
     running = True
 
-    paddle = Paddle(screen)
+    player1 = Paddle(screen, "left")
+    player2 = Paddle(screen, "right")
 
     while running:
         # Process Inputs
@@ -20,15 +21,20 @@ def main():
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
-            paddle.moveup()
+            player2.moveup()
         if keys[pygame.K_DOWN]:
-            paddle.movedown()
+            player2.movedown()
+        if keys[pygame.K_w]:
+            player1.moveup()
+        if keys[pygame.K_s]:
+            player1.movedown()
 
         # Reset Screen
         screen.fill("black")
 
         # Draw Sprites
-        paddle.draw()
+        player1.draw()
+        player2.draw()
 
         # Update Screen
         pygame.display.flip()

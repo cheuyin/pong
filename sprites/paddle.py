@@ -2,8 +2,15 @@ import pygame
 
 
 class Paddle(pygame.sprite.Sprite):
+    """
+    Paddle in a Pong game.
 
-    def __init__(self, screen: pygame.Surface):
+    Parameters:
+    - screen: the game window
+    - direction: either "left" or "right" to represent the left or right paddle
+    """
+
+    def __init__(self, screen: pygame.Surface, direction: str):
         pygame.sprite.Sprite.__init__(self)
 
         self.screen = screen
@@ -18,7 +25,12 @@ class Paddle(pygame.sprite.Sprite):
         self.surface.fill(self.color)
         self.rect: pygame.Rect = self.surface.get_rect()
 
-        self.rect.center = self.screen.get_rect().center
+        if direction == "left":
+            self.rect.center = self.screen_rect.center
+            self.rect.x = 50
+        elif direction == "right":
+            self.rect.center = self.screen_rect.center
+            self.rect.x = self.screen_rect.width - 50
 
     def draw(self):
         self.screen.blit(self.surface, self.rect)

@@ -13,15 +13,16 @@ def main():
     paddle = Paddle(screen)
 
     while running:
-        # Process player inputs
+        # Process Inputs
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    paddle.moveup()
-                elif event.key == pygame.K_DOWN:
-                    paddle.movedown()
+
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_UP]:
+            paddle.moveup()
+        if keys[pygame.K_DOWN]:
+            paddle.movedown()
 
         # Reset Screen
         screen.fill("black")

@@ -1,26 +1,30 @@
 import pygame
 
-pygame.init()
 
-screen = pygame.display.set_mode((800, 600))
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((800, 600))
+    pygame.display.set_caption("Pong")
+    clock = pygame.time.Clock()
+    running = True
 
-clock = pygame.time.Clock()
+    while running:
+        # Process player inputs
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
 
-running = True
+        # Logical updates here
+        # ...
 
-while running:
-    # Process player inputs
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
+        screen.fill("black")
 
-    # Logical updates here
-    # ...
+        pygame.display.flip()
 
-    screen.fill("black")
+        clock.tick(60)
 
-    pygame.display.flip()
+    pygame.quit()
 
-    clock.tick(60)
 
-pygame.quit()
+if __name__ == "__main__":
+    main()

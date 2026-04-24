@@ -7,6 +7,7 @@ class Paddle(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.screen = screen
+        self.screen_rect = screen.get_rect()
 
         self.width = 20
         self.height = 100
@@ -23,7 +24,9 @@ class Paddle(pygame.sprite.Sprite):
         self.screen.blit(self.surface, self.rect)
 
     def moveup(self):
-        self.rect.y -= self.speed
+        if self.rect.top > 0:
+            self.rect.y -= self.speed
 
     def movedown(self):
-        self.rect.y += self.speed
+        if self.rect.bottom < self.screen_rect.height:
+            self.rect.y += self.speed

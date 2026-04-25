@@ -1,6 +1,7 @@
 import pygame
 
 from sprites.paddle import Paddle
+from sprites.ball import Ball
 
 
 def main():
@@ -10,6 +11,7 @@ def main():
     clock = pygame.time.Clock()
     running = True
 
+    ball = Ball(screen)
     player1 = Paddle(screen, "left")
     player2 = Paddle(screen, "right")
 
@@ -32,9 +34,13 @@ def main():
         # Reset Screen
         screen.fill("black")
 
+        # Update
+        ball.update()
+
         # Draw Sprites
         player1.draw()
         player2.draw()
+        ball.draw()
 
         # Update Screen
         pygame.display.flip()

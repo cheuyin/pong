@@ -38,8 +38,6 @@ class Game:
             if keys[pygame.K_s]:
                 self.player1.movedown()
 
-            self.screen.fill(self.bg_color)
-
             self.ball.update()
 
             self._draw_screen()
@@ -47,6 +45,7 @@ class Game:
             self.clock.tick(60)
 
     def _draw_screen(self):
+        self.screen.fill(self.bg_color)
         self.player1.draw()
         self.player2.draw()
         self.ball.draw()

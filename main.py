@@ -18,6 +18,7 @@ class Game:
         self.winning_score = 3
         self.player1_score = 0
         self.player2_score = 0
+        self.bg_color = "black"
 
     def run_game(self):
         while self.game_active:
@@ -37,22 +38,20 @@ class Game:
             if keys[pygame.K_s]:
                 self.player1.movedown()
 
-            # Reset Screen
-            self.screen.fill("black")
+            self.screen.fill(self.bg_color)
 
-            # Update
             self.ball.update()
 
-            # Draw Sprites
-            self.player1.draw()
-            self.player2.draw()
-            self.ball.draw()
+            self._draw_screen()
 
-            # Update Screen
-            pygame.display.flip()
-
-            # 60 fps Clock Tick
             self.clock.tick(60)
+
+    def _draw_screen(self):
+        self.player1.draw()
+        self.player2.draw()
+        self.ball.draw()
+
+        pygame.display.flip()
 
 
 if __name__ == "__main__":

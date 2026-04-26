@@ -17,27 +17,23 @@ class Ball(pygame.sprite.Sprite):
         self.x = 0
         self.y = 0
         self.speed = 5
-        self.angle = self.generate_random_angle_rad()
+        self.angle = 0
         self.color = "yellow"
 
         self.surface = pygame.Surface((self.size, self.size))
         self.surface.fill(self.color)
         self.rect: pygame.Rect = self.surface.get_rect()
 
-        self.center_ball()
+        self.reset()
 
-    def center_ball(self):
+    def reset(self):
         self.rect.center = self.screen_rect.center
         self.x = self.rect.x
         self.y = self.rect.y
+        self.angle = self.generate_random_angle_rad()
 
     def update(self):
-        if self.check_hit_left_right_walls():
-            # Invert x coord
-            new_x = math.cos(self.angle) * -1
-            new_y = math.sin(self.angle)
-            self.angle = math.atan2(new_y, new_x)
-        elif self.player1.rect.colliderect(self.rect) or self.player2.rect.colliderect(self.rect):
+        if self.player1.rect.colliderect(self.rect) or self.player2.rect.colliderect(self.rect):
             new_x = math.cos(self.angle) * -1
             new_y = math.sin(self.angle)
             self.angle = math.atan2(new_y, new_x)
@@ -54,15 +50,6 @@ class Ball(pygame.sprite.Sprite):
 
     def check_hit_top_bottom_walls(self):
         return self.rect.top <= 0 or self.rect.bottom >= self.screen_rect.height
-
-    def check_hit_left_wall(self):
-        return self.rect.right <= 0
-
-    def check_hit_right_wall(self):
-        return self.rect.left >= self.screen_rect.width
-
-    def check_hit_left_right_walls(self):
-        return self.rect.left <= 0 or self.rect.right >= self.screen_rect.width
 
     def calculate_new_xy(self):
         self.x = self.x + self.speed * math.cos(self.angle)

@@ -1,5 +1,6 @@
 import pygame
 import sys
+from time import sleep
 
 from sprites.paddle import Paddle
 from sprites.ball import Ball
@@ -39,6 +40,7 @@ class Game:
                 self.player1.movedown()
 
             self.ball.update()
+            self._check_ball_out_of_bounds()
 
             self._draw_screen()
 
@@ -51,6 +53,16 @@ class Game:
         self.ball.draw()
 
         pygame.display.flip()
+
+    def _check_ball_out_of_bounds(self):
+        screen_rect = self.screen.get_rect()
+        ball_rect = self.ball.rect
+        if ball_rect.right <= 0 or ball_rect.left >= screen_rect.width:
+            self._round_over()
+
+    def _round_over(self):
+        sleep(0.5)
+        self.ball.reset()
 
 
 if __name__ == "__main__":

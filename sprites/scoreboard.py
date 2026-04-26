@@ -1,0 +1,37 @@
+import pygame
+from game_stats import GameStats
+
+
+class Scoreboard:
+    def __init__(self, window: pygame.Surface, stats: GameStats):
+        self.window = window
+        self.window_rect = window.get_rect()
+        self.text_color = (30, 30, 30)
+        self.font_size = 64
+        self.font = pygame.font.SysFont(None, self.font_size)
+        self.stats = stats
+
+        self.prep_player_scores()
+
+    def prep_player_scores(self):
+        player_1_score_str = f"{self.stats.player1_score}"
+        player_2_score_str = f"{self.stats.player2_score}"
+
+        self.player_1_score_img = self.font.render(
+            player_1_score_str, True, self.text_color)
+        self.player_2_score_img = self.font.render(
+            player_2_score_str, True, self.text_color)
+
+        self.player_1_score_img_rect = self.player_1_score_img.get_rect()
+        self.player_1_score_img_rect.centerx = self.window_rect.centerx - 100
+        self.player_1_score_img_rect.top += 20
+
+        self.player_2_score_img_rect = self.player_2_score_img.get_rect()
+        self.player_2_score_img_rect.centerx = self.window_rect.centerx + 100
+        self.player_2_score_img_rect.top += 20
+
+    def show_score(self):
+        self.window.blit(self.player_1_score_img,
+                         self.player_1_score_img_rect)
+        self.window.blit(self.player_2_score_img,
+                         self.player_2_score_img_rect)

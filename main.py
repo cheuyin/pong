@@ -4,6 +4,9 @@ from time import sleep
 
 from sprites.paddle import Paddle
 from sprites.ball import Ball
+from sprites.scoreboard import Scoreboard
+
+from game_stats import GameStats
 
 
 class Game:
@@ -17,10 +20,9 @@ class Game:
         self.player2 = Paddle(self.screen, "right")
         self.ball = Ball(self.screen, self.player1, self.player2)
         self.winning_score = 3
-        self.player1_score = 0
-        self.player2_score = 0
+        self.stats = GameStats()
         self.bg_color = "black"
-        self.scoreboard = Scoreboard(self)
+        self.scoreboard = Scoreboard(self.screen, self.stats)
 
     def run_game(self):
         while self.game_active:
@@ -67,49 +69,11 @@ class Game:
     def _round_over(self, player_that_won):
         sleep(0.5)
         if player_that_won == "player 1":
-            self.player1_score += 1
+            self.stats.player1_score += 1
         elif player_that_won == "player 2":
-            self.player2_score += 1
+            self.stats.player2_score += 1
         self.scoreboard.prep_player_scores()
         self.ball.reset()
-
-        print("===== SCORE =====")
-        print(f"Player 1: {self.player1_score}")
-        print(f"Player 2: {self.player2_score}")
-
-
-class Scoreboard:
-    def __init__(self, game: Game):
-        self.game = game
-        self.screen_rect = game.screen.get_rect()
-        self.text_color = (30, 30, 30)
-        self.font_size = 64
-        self.font = pygame.font.SysFont(None, self.font_size)
-
-        self.prep_player_scores()
-
-    def prep_player_scores(self):
-        player_1_score_str = f"{self.game.player1_score}"
-        player_2_score_str = f"{self.game.player2_score}"
-
-        self.player_1_score_img = self.font.render(
-            player_1_score_str, True, self.text_color)
-        self.player_2_score_img = self.font.render(
-            player_2_score_str, True, self.text_color)
-
-        self.player_1_score_img_rect = self.player_1_score_img.get_rect()
-        self.player_1_score_img_rect.centerx = self.screen_rect.centerx - 100
-        self.player_1_score_img_rect.top += 20
-
-        self.player_2_score_img_rect = self.player_2_score_img.get_rect()
-        self.player_2_score_img_rect.centerx = self.screen_rect.centerx + 100
-        self.player_2_score_img_rect.top += 20
-
-    def show_score(self):
-        self.game.screen.blit(self.player_1_score_img,
-                              self.player_1_score_img_rect)
-        self.game.screen.blit(self.player_2_score_img,
-                              self.player_2_score_img_rect)
 
 
 if __name__ == "__main__":

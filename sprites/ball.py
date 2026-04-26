@@ -16,7 +16,7 @@ class Ball(pygame.sprite.Sprite):
         self.size = 20
         self.x = 0
         self.y = 0
-        self.speed = 5
+        self.speed = 8
         self.angle = 0
         self.color = "yellow"
 

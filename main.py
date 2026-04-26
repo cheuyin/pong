@@ -20,6 +20,7 @@ class Game:
         self.player1_score = 0
         self.player2_score = 0
         self.bg_color = "black"
+        self.scoreboard = Scoreboard(self)
 
     def run_game(self):
         while self.game_active:
@@ -51,6 +52,7 @@ class Game:
         self.player1.draw()
         self.player2.draw()
         self.ball.draw()
+        self.scoreboard.show_score()
 
         pygame.display.flip()
 
@@ -68,11 +70,46 @@ class Game:
             self.player1_score += 1
         elif player_that_won == "player 2":
             self.player2_score += 1
+        self.scoreboard.prep_player_scores()
         self.ball.reset()
 
         print("===== SCORE =====")
         print(f"Player 1: {self.player1_score}")
         print(f"Player 2: {self.player2_score}")
+
+
+class Scoreboard:
+    def __init__(self, game: Game):
+        self.game = game
+        self.screen_rect = game.screen.get_rect()
+        self.text_color = (30, 30, 30)
+        self.font = pygame.font.SysFont(None, 48)
+
+        self.prep_player_scores()
+
+    def prep_player_scores(self):
+        player_1_score_str = f"{self.game.player1_score}"
+        player_2_score_str = f"{self.game.player2_score}"
+
+        self.player_1_score_img = self.font.render(
+            player_1_score_str, True, self.text_color, self.game.bg_color)
+        self.player_2_score_img = self.font.render(
+            player_2_score_str, True, self.text_color, self.game.bg_color
+        )
+
+        self.player_1_score_img_rect = self.player_1_score_img.get_rect()
+        self.player_1_score_img_rect.left = self.screen_rect.left
+        self.player_1_score_img_rect.top = self.screen_rect.top
+
+        self.player_2_score_img_rect = self.player_2_score_img.get_rect()
+        self.player_2_score_img_rect.right = self.screen_rect.right
+        self.player_2_score_img_rect.top = self.screen_rect.top
+
+    def show_score(self):
+        self.game.screen.blit(self.player_1_score_img,
+                              self.player_1_score_img_rect)
+        self.game.screen.blit(self.player_2_score_img,
+                              self.player_2_score_img_rect)
 
 
 if __name__ == "__main__":

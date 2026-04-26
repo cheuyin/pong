@@ -55,6 +55,12 @@ class Ball(pygame.sprite.Sprite):
     def check_hit_top_bottom_walls(self):
         return self.rect.top <= 0 or self.rect.bottom >= self.screen_rect.height
 
+    def check_hit_left_wall(self):
+        return self.rect.right <= 0
+
+    def check_hit_right_wall(self):
+        return self.rect.left >= self.screen_rect.width
+
     def check_hit_left_right_walls(self):
         return self.rect.left <= 0 or self.rect.right >= self.screen_rect.width
 

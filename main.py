@@ -1,55 +1,60 @@
 import pygame
+import sys
 
 from sprites.paddle import Paddle
 from sprites.ball import Ball
 
 
-def main():
-    pygame.init()
-    screen = pygame.display.set_mode((800, 600))
-    pygame.display.set_caption("Pong")
-    clock = pygame.time.Clock()
-    running = True
+class Game:
+    def __init__(self):
+        pygame.init()
+        pygame.display.set_caption("Pong")
+        self.screen = pygame.display.set_mode((800, 600))
+        self.clock = pygame.time.Clock()
+        self.game_active = True
+        self.player1 = Paddle(self.screen, "left")
+        self.player2 = Paddle(self.screen, "right")
+        self.ball = Ball(self.screen, self.player1, self.player2)
+        self.winning_score = 3
+        self.player1_score = 0
+        self.player2_score = 0
 
-    player1 = Paddle(screen, "left")
-    player2 = Paddle(screen, "right")
-    ball = Ball(screen, player1, player2)
+    def run_game(self):
+        while self.game_active:
+            # Process Inputs
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
 
-    while running:
-        # Process Inputs
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_UP]:
+                self.player2.moveup()
+            if keys[pygame.K_DOWN]:
+                self.player2.movedown()
+            if keys[pygame.K_w]:
+                self.player1.moveup()
+            if keys[pygame.K_s]:
+                self.player1.movedown()
 
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_UP]:
-            player2.moveup()
-        if keys[pygame.K_DOWN]:
-            player2.movedown()
-        if keys[pygame.K_w]:
-            player1.moveup()
-        if keys[pygame.K_s]:
-            player1.movedown()
+            # Reset Screen
+            self.screen.fill("black")
 
-        # Reset Screen
-        screen.fill("black")
+            # Update
+            self.ball.update()
 
-        # Update
-        ball.update()
+            # Draw Sprites
+            self.player1.draw()
+            self.player2.draw()
+            self.ball.draw()
 
-        # Draw Sprites
-        player1.draw()
-        player2.draw()
-        ball.draw()
+            # Update Screen
+            pygame.display.flip()
 
-        # Update Screen
-        pygame.display.flip()
-
-        # 60 fps Clock Tick
-        clock.tick(60)
-
-    pygame.quit()
+            # 60 fps Clock Tick
+            self.clock.tick(60)
 
 
 if __name__ == "__main__":
-    main()
+    pong = Game()
+    pong.run_game()

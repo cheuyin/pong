@@ -11,9 +11,9 @@ def main():
     clock = pygame.time.Clock()
     running = True
 
-    ball = Ball(screen)
     player1 = Paddle(screen, "left")
     player2 = Paddle(screen, "right")
+    ball = Ball(screen, player1, player2)
 
     while running:
         # Process Inputs

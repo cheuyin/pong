@@ -83,7 +83,8 @@ class Scoreboard:
         self.game = game
         self.screen_rect = game.screen.get_rect()
         self.text_color = (30, 30, 30)
-        self.font = pygame.font.SysFont(None, 48)
+        self.font_size = 64
+        self.font = pygame.font.SysFont(None, self.font_size)
 
         self.prep_player_scores()
 
@@ -92,10 +93,9 @@ class Scoreboard:
         player_2_score_str = f"{self.game.player2_score}"
 
         self.player_1_score_img = self.font.render(
-            player_1_score_str, True, self.text_color, self.game.bg_color)
+            player_1_score_str, True, self.text_color)
         self.player_2_score_img = self.font.render(
-            player_2_score_str, True, self.text_color, self.game.bg_color
-        )
+            player_2_score_str, True, self.text_color)
 
         self.player_1_score_img_rect = self.player_1_score_img.get_rect()
         self.player_1_score_img_rect.left = self.screen_rect.left

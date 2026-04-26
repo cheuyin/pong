@@ -98,12 +98,12 @@ class Scoreboard:
             player_2_score_str, True, self.text_color)
 
         self.player_1_score_img_rect = self.player_1_score_img.get_rect()
-        self.player_1_score_img_rect.left = self.screen_rect.left
-        self.player_1_score_img_rect.top = self.screen_rect.top
+        self.player_1_score_img_rect.centerx = self.screen_rect.centerx - 100
+        self.player_1_score_img_rect.top += 20
 
         self.player_2_score_img_rect = self.player_2_score_img.get_rect()
-        self.player_2_score_img_rect.right = self.screen_rect.right
-        self.player_2_score_img_rect.top = self.screen_rect.top
+        self.player_2_score_img_rect.centerx = self.screen_rect.centerx + 100
+        self.player_2_score_img_rect.top += 20
 
     def show_score(self):
         self.game.screen.blit(self.player_1_score_img,

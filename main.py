@@ -24,8 +24,7 @@ class Game:
         self.ball = Ball(self.screen, self.player1, self.player2)
         self.stats = GameStats()
         self.scoreboard = Scoreboard(self.screen, self.stats)
-        self.game_end_message1: Text
-        self.game_end_message2: Text
+        self.game_end_message: pygame.Surface
 
     def run_game(self):
         while True:
@@ -35,7 +34,8 @@ class Game:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN and not self.game_active:
-                    self._reset_game()
+                    if pygame.key.get_just_pressed()[pygame.K_SPACE]:
+                        self._reset_game()
 
             if self.game_active:
                 keys = pygame.key.get_pressed()
@@ -97,7 +97,7 @@ class Game:
         self.game_end_message1 = Text(
             f"Winner: {player_that_won}", settings.MEDIUM_TEXT, screen_rect.centerx, screen_rect.centery, self.screen)
         self.game_end_message2 = Text(
-            f"Press any key to restart", settings.SMALL_TEXT, screen_rect.centerx, screen_rect.centery + 50, self.screen, settings.GREY)
+            f"Press space to restart", settings.SMALL_TEXT, screen_rect.centerx, screen_rect.centery + 50, self.screen, settings.GREY)
 
     def _reset_game(self):
         self.game_active = True
@@ -105,6 +105,12 @@ class Game:
         self.stats.player1_score = 0
         self.stats.player2_score = 0
         self.scoreboard.prep_player_scores()
+
+    def _prep_game_end_message(self):
+        pass
+
+    def _draw_game_end_message(self):
+        pass
 
 
 if __name__ == "__main__":

@@ -1,6 +1,7 @@
 import pygame
 import sys
 from time import sleep
+import settings
 
 from sprites.paddle import Paddle
 from sprites.ball import Ball
@@ -13,16 +14,15 @@ from game_stats import GameStats
 class Game:
     def __init__(self):
         pygame.init()
-        pygame.display.set_caption("Pong")
-        self.screen = pygame.display.set_mode((800, 600))
+        pygame.display.set_caption(settings.WINDOW_CAPTION)
+        self.screen = pygame.display.set_mode(
+            (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.game_active = True
         self.player1 = Paddle(self.screen, "left")
         self.player2 = Paddle(self.screen, "right")
         self.ball = Ball(self.screen, self.player1, self.player2)
-        self.winning_score = 3
         self.stats = GameStats()
-        self.bg_color = "black"
         self.scoreboard = Scoreboard(self.screen, self.stats)
         self.game_end_message1: Text
         self.game_end_message2: Text
@@ -35,11 +35,7 @@ class Game:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN and not self.game_active:
-                    self.game_active = True
-                    self.ball.reset()
-                    self.stats.player1_score = 0
-                    self.stats.player2_score = 0
-                    self.scoreboard.prep_player_scores()
+                    self._reset_game()
 
             if self.game_active:
                 keys = pygame.key.get_pressed()
@@ -60,7 +56,7 @@ class Game:
             self.clock.tick(60)
 
     def _draw_screen(self):
-        self.screen.fill(self.bg_color)
+        self.screen.fill(settings.SCREEN_BG_COLOR)
         self.player1.draw()
         self.player2.draw()
         if self.game_active:  # Only draw ball when game is active
@@ -90,18 +86,25 @@ class Game:
         self.scoreboard.prep_player_scores()
         self.ball.reset()
 
-        if self.stats.player1_score == self.winning_score:
+        if self.stats.player1_score == settings.WINNING_SCORE:
             self._game_over("Player 1")
-        elif self.stats.player2_score == self.winning_score:
+        elif self.stats.player2_score == settings.WINNING_SCORE:
             self._game_over("Player 2")
 
     def _game_over(self, player_that_won):
         self.game_active = False
         screen_rect = self.screen.get_rect()
         self.game_end_message1 = Text(
-            f"Winner: {player_that_won}", 48, screen_rect.centerx, screen_rect.centery, self.screen)
+            f"Winner: {player_that_won}", settings.MEDIUM_TEXT, screen_rect.centerx, screen_rect.centery, self.screen)
         self.game_end_message2 = Text(
-            f"Press any key to restart", 24, screen_rect.centerx, screen_rect.centery + 50, self.screen, (220, 220, 220))
+            f"Press any key to restart", settings.SMALL_TEXT, screen_rect.centerx, screen_rect.centery + 50, self.screen, settings.GREY)
+
+    def _reset_game(self):
+        self.game_active = True
+        self.ball.reset()
+        self.stats.player1_score = 0
+        self.stats.player2_score = 0
+        self.scoreboard.prep_player_scores()
 
 
 if __name__ == "__main__":

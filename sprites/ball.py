@@ -1,6 +1,7 @@
 import pygame
 import math
 import random
+import settings
 from sprites.paddle import Paddle
 
 
@@ -18,7 +19,7 @@ class Ball(pygame.sprite.Sprite):
         self.y = 0
         self.speed = 8
         self.angle = 0
-        self.color = "yellow"
+        self.color = settings.WHITE
 
         self.surface = pygame.Surface((self.size, self.size))
         self.surface.fill(self.color)

@@ -1,4 +1,5 @@
 import pygame
+import settings
 from game_stats import GameStats
 
 
@@ -6,9 +7,8 @@ class Scoreboard:
     def __init__(self, window: pygame.Surface, stats: GameStats):
         self.window = window
         self.window_rect = window.get_rect()
-        self.text_color = (30, 30, 30)
-        self.font_size = 64
-        self.font = pygame.font.SysFont(None, self.font_size)
+        self.text_color = settings.LIGHT_GREY
+        self.font = pygame.font.SysFont(None, settings.LARGE_TEXT)
         self.stats = stats
 
         self.prep_player_scores()

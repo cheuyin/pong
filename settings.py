@@ -1,3 +1,6 @@
+from enum import Enum
+
+
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREY = (220, 220, 220)
@@ -10,6 +13,13 @@ WINDOW_CAPTION = "Pong"
 SCREEN_BG_COLOR = BLACK
 WINNING_SCORE = 3
 
+PRIMARY_FONT = None
+
 SMALL_TEXT = 24
 MEDIUM_TEXT = 48
 LARGE_TEXT = 64
+
+
+class Player(Enum):
+    PLAYER_1 = "Player 1"
+    PLAYER_2 = "Player 2"

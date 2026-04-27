@@ -34,18 +34,19 @@ class Game:
                     pygame.quit()
                     sys.exit()
 
-            keys = pygame.key.get_pressed()
-            if keys[pygame.K_UP]:
-                self.player2.moveup()
-            if keys[pygame.K_DOWN]:
-                self.player2.movedown()
-            if keys[pygame.K_w]:
-                self.player1.moveup()
-            if keys[pygame.K_s]:
-                self.player1.movedown()
+            if self.game_active:
+                keys = pygame.key.get_pressed()
+                if keys[pygame.K_UP]:
+                    self.player2.moveup()
+                if keys[pygame.K_DOWN]:
+                    self.player2.movedown()
+                if keys[pygame.K_w]:
+                    self.player1.moveup()
+                if keys[pygame.K_s]:
+                    self.player1.movedown()
 
-            self.ball.update()
-            self._check_ball_out_of_bounds()
+                self.ball.update()
+                self._check_ball_out_of_bounds()
 
             self._draw_screen()
 
@@ -89,7 +90,7 @@ class Game:
         self.game_active = False
         screen_rect = self.screen.get_rect()
         self.game_end_message = Text(
-            f"Winner: {player_that_won}", screen_rect.centerx, screen_rect.centery, self.screen)
+            f"Winner: {player_that_won}", screen_rect.centerx, screen_rect.centery - 50, self.screen)
 
 
 if __name__ == "__main__":

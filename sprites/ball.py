@@ -61,4 +61,5 @@ class Ball(pygame.sprite.Sprite):
         return random_rad
 
     def draw(self):
-        self.screen.blit(self.surface, self.rect)
+        pygame.draw.circle(self.screen, settings.WHITE,
+                           self.rect.center, self.rect.width / 2)

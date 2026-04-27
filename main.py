@@ -5,6 +5,7 @@ from time import sleep
 from sprites.paddle import Paddle
 from sprites.ball import Ball
 from sprites.scoreboard import Scoreboard
+from sprites.text import Text
 
 from game_stats import GameStats
 
@@ -23,9 +24,10 @@ class Game:
         self.stats = GameStats()
         self.bg_color = "black"
         self.scoreboard = Scoreboard(self.screen, self.stats)
+        self.game_end_message: Text
 
     def run_game(self):
-        while self.game_active:
+        while True:
             # Process Inputs
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -56,24 +58,38 @@ class Game:
         self.ball.draw()
         self.scoreboard.show_score()
 
+        if not self.game_active:
+            self.game_end_message.draw()
+
         pygame.display.flip()
 
     def _check_ball_out_of_bounds(self):
         screen_rect = self.screen.get_rect()
         ball_rect = self.ball.rect
         if ball_rect.right <= 0:
-            self._round_over("player 2")
+            self._round_over("Player 2")
         elif ball_rect.left >= screen_rect.width:
-            self._round_over("player 1")
+            self._round_over("Player 1")
 
     def _round_over(self, player_that_won):
         sleep(0.5)
-        if player_that_won == "player 1":
+        if player_that_won == "Player 1":
             self.stats.player1_score += 1
-        elif player_that_won == "player 2":
+        elif player_that_won == "Player 2":
             self.stats.player2_score += 1
         self.scoreboard.prep_player_scores()
         self.ball.reset()
+
+        if self.stats.player1_score == self.winning_score:
+            self._game_over("Player 1")
+        elif self.stats.player2_score == self.winning_score:
+            self._game_over("Player 2")
+
+    def _game_over(self, player_that_won):
+        self.game_active = False
+        screen_rect = self.screen.get_rect()
+        self.game_end_message = Text(
+            f"Winner: {player_that_won}", screen_rect.centerx, screen_rect.centery, self.screen)
 
 
 if __name__ == "__main__":

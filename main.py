@@ -24,7 +24,8 @@ class Game:
         self.stats = GameStats()
         self.bg_color = "black"
         self.scoreboard = Scoreboard(self.screen, self.stats)
-        self.game_end_message: Text
+        self.game_end_message1: Text
+        self.game_end_message2: Text
 
     def run_game(self):
         while True:
@@ -33,6 +34,12 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                if event.type == pygame.KEYDOWN and not self.game_active:
+                    self.game_active = True
+                    self.ball.reset()
+                    self.stats.player1_score = 0
+                    self.stats.player2_score = 0
+                    self.scoreboard.prep_player_scores()
 
             if self.game_active:
                 keys = pygame.key.get_pressed()
@@ -56,11 +63,13 @@ class Game:
         self.screen.fill(self.bg_color)
         self.player1.draw()
         self.player2.draw()
-        self.ball.draw()
+        if self.game_active:  # Only draw ball when game is active
+            self.ball.draw()
         self.scoreboard.show_score()
 
         if not self.game_active:
-            self.game_end_message.draw()
+            self.game_end_message1.draw()
+            self.game_end_message2.draw()
 
         pygame.display.flip()
 
@@ -89,8 +98,10 @@ class Game:
     def _game_over(self, player_that_won):
         self.game_active = False
         screen_rect = self.screen.get_rect()
-        self.game_end_message = Text(
-            f"Winner: {player_that_won}", screen_rect.centerx, screen_rect.centery - 50, self.screen)
+        self.game_end_message1 = Text(
+            f"Winner: {player_that_won}", 48, screen_rect.centerx, screen_rect.centery, self.screen)
+        self.game_end_message2 = Text(
+            f"Press any key to restart", 24, screen_rect.centerx, screen_rect.centery + 50, self.screen, (220, 220, 220))
 
 
 if __name__ == "__main__":

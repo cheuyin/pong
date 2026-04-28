@@ -106,7 +106,7 @@ class Game:
         winner_message_font = pygame.font.SysFont(
             settings.PRIMARY_FONT, settings.MEDIUM_TEXT)
         winner_message = winner_message_font.render(
-            f"Winner: {settings.Player.PLAYER_1.value}", True, settings.WHITE)
+            f"Winner: {self.winner.value}", True, settings.WHITE)
         play_again_message_font = pygame.font.SysFont(
             settings.PRIMARY_FONT, settings.SMALL_TEXT)
         play_again_message = play_again_message_font.render(

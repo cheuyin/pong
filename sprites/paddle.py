@@ -17,8 +17,8 @@ class Paddle(pygame.sprite.Sprite):
         self.screen_rect = screen.get_rect()
 
         self.width = 10
-        self.height = 100
-        self.speed = 5
+        self.height = 80
+        self.speed = 8
         self.color = "white"
 
         self.surface = pygame.Surface((self.width, self.height))

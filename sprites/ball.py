@@ -38,33 +38,15 @@ class Ball(pygame.sprite.Sprite):
         return pygame.Vector2(left_or_right, angle).normalize()
 
     def update(self):
-        oldRect = self.rect.copy()
-
         self.calculate_new_xy()
 
         self.rect.x = self.x
         self.rect.y = self.y
 
         if self.player1.rect.colliderect(self.rect):
-            if oldRect.bottom <= self.player1.rect.top:
-                self.direction.y *= -1
-                self.y = self.player1.rect.top - \
-                    self.size - self.player1.speed
-            elif oldRect.top >= self.player1.rect.bottom:
-                self.direction.y *= -1
-                self.y = self.player1.rect.bottom + self.player1.speed
-            else:
-                self.direction.x *= -1
+            self._resolve_paddle_collision(self.player1)
         elif self.player2.rect.colliderect(self.rect):
-            if oldRect.bottom <= self.player2.rect.top:
-                self.direction.y *= -1
-                self.y = self.player2.rect.top - \
-                    self.size - self.player2.speed
-            elif oldRect.top >= self.player2.rect.bottom:
-                self.direction.y *= -1
-                self.y = self.player2.rect.bottom + self.player2.speed
-            else:
-                self.direction.x *= -1
+            self._resolve_paddle_collision(self.player2)
         elif self.rect.top <= 0:
             self.direction.y *= -1
             self.y = 1
@@ -74,6 +56,23 @@ class Ball(pygame.sprite.Sprite):
 
         self.rect.x = self.x
         self.rect.y = self.y
+
+    def _resolve_paddle_collision(self, paddle: Paddle):
+        overlap_x = min(self.rect.right, paddle.rect.right) - max(self.rect.left, paddle.rect.left)
+        overlap_y = min(self.rect.bottom, paddle.rect.bottom) - max(self.rect.top, paddle.rect.top)
+
+        if overlap_y < overlap_x: # Ball hits the top or bottom
+            self.direction.y *= -1
+            if self.rect.centery < paddle.rect.centery:
+                self.y = paddle.rect.top - self.size
+            else:
+                self.y = paddle.rect.bottom
+        else: 
+            self.direction.x *= -1
+            if self.rect.centerx < paddle.rect.centerx:
+                self.x = paddle.rect.left - self.size
+            else:
+                self.x = paddle.rect.right
 
     def calculate_new_xy(self):
         self.x += self.speed * self.direction.x

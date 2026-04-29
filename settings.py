@@ -40,5 +40,3 @@ AI_DIFFICULTY_SETTINGS = {
     Difficulty.MEDIUM: {"speed_multiplier": 0.70, "error": 40},
     Difficulty.HARD:   {"speed_multiplier": 1.00, "error": 25},
 }
-
-AI_DIFFICULTY = Difficulty.MEDIUM

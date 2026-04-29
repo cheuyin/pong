@@ -1,16 +1,43 @@
+from enum import Enum
 import pygame
 import sys
 from time import sleep
 import settings
 
+from menu import Menu
 from sprites.human_paddle import HumanPaddle
 from sprites.ai_paddle import AIPaddle
 from sprites.ball import Ball
+from sprites.paddle import Paddle
 from sprites.scoreboard import Scoreboard
 from game_stats import GameStats
 
 
+class GameState(Enum):
+    MENU_GAME_MODE = "menu_game_mode"
+    MENU_DIFFICULTY = "menu_difficulty"
+    PLAYING = "playing"
+    GAME_OVER = "game_over"
+
+
+GAME_MODES = ["Human vs. Human", "Human vs. AI"]
+
+DIFFICULTY_OPTIONS: list[tuple[str, settings.Difficulty]] = [
+    ("Easy", settings.Difficulty.EASY),
+    ("Medium", settings.Difficulty.MEDIUM),
+    ("Hard", settings.Difficulty.HARD),
+]
+
+
 class Game:
+    player1: Paddle
+    player2: Paddle
+    ball: Ball
+    stats: GameStats
+    scoreboard: Scoreboard
+    winner: settings.Player
+    game_end_message: pygame.Surface
+
     def __init__(self):
         pygame.init()
         pygame.display.set_caption(settings.WINDOW_CAPTION)
@@ -18,37 +45,63 @@ class Game:
             (settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
         self.screen_rect = self.screen.get_rect()
         self.clock = pygame.time.Clock()
-        self.game_active = True
-        self.player1 = HumanPaddle(self.screen, "left", pygame.K_w, pygame.K_s)
-        self.player2 = AIPaddle(self.screen, "right", settings.AI_DIFFICULTY)
-        self.winner: settings.Player
-        self.ball = Ball(self.screen, self.player1, self.player2)
-        self.player2.ball = self.ball
-        self.stats = GameStats()
-        self.scoreboard = Scoreboard(self.screen, self.stats)
-        self.round_win_sound = pygame.mixer.Sound("assets/sounds/round_win.wav")
-        self.game_end_message: pygame.Surface
+        self.round_win_sound = pygame.mixer.Sound(
+            "assets/sounds/round_win.wav")
+
+        self.opponent_menu = Menu(self.screen, "Game Mode", GAME_MODES)
+        self.difficulty_menu = Menu(
+            self.screen, "AI Difficulty", [label for label, _ in DIFFICULTY_OPTIONS])
+        self.state = GameState.MENU_GAME_MODE
 
     def run_game(self):
         while True:
-            # Process Inputs
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.KEYDOWN and not self.game_active:
-                    if pygame.key.get_just_pressed()[pygame.K_SPACE]:
-                        self._reset_game()
+                self._handle_event(event)
 
-            if self.game_active:
+            if self.state == GameState.PLAYING:
                 self.player1.update()
                 self.player2.update()
                 self.ball.update()
                 self._check_ball_out_of_bounds()
 
             self._draw_screen()
-
             self.clock.tick(60)
+
+    def _handle_event(self, event: pygame.event.Event):
+        if self.state == GameState.MENU_GAME_MODE:
+            selected = self.opponent_menu.handle_event(event)
+            if selected is None:
+                return
+            if GAME_MODES[selected] == "Human vs. Human":
+                self._start_game(HumanPaddle(
+                    self.screen, "right", pygame.K_UP, pygame.K_DOWN))
+            else:
+                self.difficulty_menu.reset()
+                self.state = GameState.MENU_DIFFICULTY
+
+        elif self.state == GameState.MENU_DIFFICULTY:
+            selected = self.difficulty_menu.handle_event(event)
+            if selected is None:
+                return
+            _, difficulty = DIFFICULTY_OPTIONS[selected]
+            self._start_game(AIPaddle(self.screen, "right", difficulty))
+
+        elif self.state == GameState.GAME_OVER:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                self._reset_game()
+
+    def _start_game(self, player2: Paddle):
+        self.player1 = HumanPaddle(self.screen, "left", pygame.K_w, pygame.K_s)
+        self.player2 = player2
+        self.ball = Ball(self.screen, self.player1, self.player2)
+        if isinstance(self.player2, AIPaddle):
+            self.player2.ball = self.ball
+        self.stats = GameStats()
+        self.scoreboard = Scoreboard(self.screen, self.stats)
+        self.state = GameState.PLAYING
 
     def _draw_center_line(self):
         x = self.screen_rect.centerx
@@ -56,20 +109,25 @@ class Game:
         gap_length = 8
         y = 0
         while y < self.screen_rect.height:
-            pygame.draw.line(self.screen, settings.GREY, (x, y), (x, min(y + dash_length, self.screen_rect.height)))
+            pygame.draw.line(self.screen, settings.GREY, (x, y),
+                             (x, min(y + dash_length, self.screen_rect.height)))
             y += dash_length + gap_length
 
     def _draw_screen(self):
-        self.screen.fill(settings.SCREEN_BG_COLOR)
-        self._draw_center_line()
-        self.player1.draw()
-        self.player2.draw()
-        if self.game_active:  # Only draw ball when game is active
-            self.ball.draw()
-        self.scoreboard.show_score()
-
-        if not self.game_active:
-            self._draw_game_end_message()
+        if self.state == GameState.MENU_GAME_MODE:
+            self.opponent_menu.draw()
+        elif self.state == GameState.MENU_DIFFICULTY:
+            self.difficulty_menu.draw()
+        else:
+            self.screen.fill(settings.SCREEN_BG_COLOR)
+            self._draw_center_line()
+            self.player1.draw()
+            self.player2.draw()
+            if self.state == GameState.PLAYING:
+                self.ball.draw()
+            self.scoreboard.show_score()
+            if self.state == GameState.GAME_OVER:
+                self._draw_game_end_message()
 
         pygame.display.flip()
 
@@ -98,11 +156,11 @@ class Game:
             self._game_over()
 
     def _game_over(self):
-        self.game_active = False
+        self.state = GameState.GAME_OVER
         self._prep_game_end_message()
 
     def _reset_game(self):
-        self.game_active = True
+        self.state = GameState.PLAYING
         self.ball.reset()
         self.stats.player1_score = 0
         self.stats.player2_score = 0

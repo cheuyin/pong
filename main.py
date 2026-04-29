@@ -56,8 +56,18 @@ class Game:
 
             self.clock.tick(60)
 
+    def _draw_center_line(self):
+        x = self.screen_rect.centerx
+        dash_length = 12
+        gap_length = 8
+        y = 0
+        while y < self.screen_rect.height:
+            pygame.draw.line(self.screen, settings.GREY, (x, y), (x, min(y + dash_length, self.screen_rect.height)))
+            y += dash_length + gap_length
+
     def _draw_screen(self):
         self.screen.fill(settings.SCREEN_BG_COLOR)
+        self._draw_center_line()
         self.player1.draw()
         self.player2.draw()
         if self.game_active:  # Only draw ball when game is active

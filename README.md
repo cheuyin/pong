@@ -4,6 +4,8 @@ A from-scratch implementation of the classic arcade game in Python and Pygame, f
 
 Built without AI coding assistance as a learning exercise in Python, OOP design, and game programming.
 
+![Pong gameplay](assets/demo.gif)
+
 ## Features
 
 - **Two game modes:** Human vs. Human (local multiplayer) and Human vs. AI
@@ -13,9 +15,7 @@ Built without AI coding assistance as a learning exercise in Python, OOP design,
 - **Pixel-art presentation:** retro Jersey 10 font, dashed center line, and sound effects on paddle hits and round wins
 - **Polished menu flow:** keyboard-driven menus for selecting game mode and difficulty, with a game-over screen and one-key restart
 
-## Demo
-
-Run the game and you'll see:
+## Game Flow
 
 1. **Title menu:** choose Human vs. Human or Human vs. AI
 2. **Difficulty menu** (AI mode only): Easy / Medium / Hard
@@ -74,7 +74,8 @@ pong/
 │   └── scoreboard.py      # On-screen score rendering
 ├── assets/
 │   ├── fonts/             # Jersey 10 pixel font
-│   └── sounds/            # Paddle-hit and round-win SFX
+│   ├── sounds/            # Paddle-hit and round-win SFX
+│   └── demo.gif           # Gameplay preview (used in this README)
 └── requirements.txt
 ```
 

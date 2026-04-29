@@ -24,6 +24,8 @@ class Ball(pygame.sprite.Sprite):
         self.surface.fill(self.color)
         self.rect: pygame.Rect = self.surface.get_rect()
 
+        self.ball_hit_sound = pygame.mixer.Sound("assets/sounds/ball_hit_sound.wav")
+
         self.reset()
 
     def reset(self):
@@ -50,14 +52,17 @@ class Ball(pygame.sprite.Sprite):
         elif self.rect.top <= 0:
             self.direction.y *= -1
             self.y = 1
+            self.ball_hit_sound.play()
         elif self.rect.bottom >= self.screen_rect.height:
             self.direction.y *= -1
             self.y = self.screen_rect.height - self.size
+            self.ball_hit_sound.play()
 
         self.rect.x = self.x
         self.rect.y = self.y
 
     def _resolve_paddle_collision(self, paddle: Paddle):
+        self.ball_hit_sound.play()
         overlap_x = min(self.rect.right, paddle.rect.right) - max(self.rect.left, paddle.rect.left)
         overlap_y = min(self.rect.bottom, paddle.rect.bottom) - max(self.rect.top, paddle.rect.top)
 

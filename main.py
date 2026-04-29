@@ -24,6 +24,7 @@ class Game:
         self.ball = Ball(self.screen, self.player1, self.player2)
         self.stats = GameStats()
         self.scoreboard = Scoreboard(self.screen, self.stats)
+        self.round_win_sound = pygame.mixer.Sound("assets/sounds/round_win.wav")
         self.game_end_message: pygame.Surface
 
     def run_game(self):
@@ -76,6 +77,7 @@ class Game:
             self._round_over(settings.Player.PLAYER_1)
 
     def _round_over(self, player_that_won):
+        self.round_win_sound.play()
         sleep(0.5)
         if player_that_won == settings.Player.PLAYER_1:
             self.stats.player1_score += 1

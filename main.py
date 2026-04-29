@@ -1,7 +1,6 @@
 from enum import Enum
 import pygame
 import sys
-from time import sleep
 import settings
 
 from menu import Menu
@@ -17,6 +16,7 @@ class GameState(Enum):
     MENU_GAME_MODE = "menu_game_mode"
     MENU_DIFFICULTY = "menu_difficulty"
     PLAYING = "playing"
+    ROUND_PAUSE = "round_pause"
     GAME_OVER = "game_over"
 
 
@@ -52,6 +52,7 @@ class Game:
         self.difficulty_menu = Menu(
             self.screen, "AI Difficulty", [label for label, _ in DIFFICULTY_OPTIONS])
         self.state = GameState.MENU_GAME_MODE
+        self._round_resume_at: int = 0
 
     def run_game(self):
         while True:
@@ -66,6 +67,9 @@ class Game:
                 self.player2.update()
                 self.ball.update()
                 self._check_ball_out_of_bounds()
+            elif self.state == GameState.ROUND_PAUSE:
+                if pygame.time.get_ticks() >= self._round_resume_at:
+                    self._finalize_round()
 
             self._draw_screen()
             self.clock.tick(60)
@@ -110,8 +114,8 @@ class Game:
 
     def _draw_center_line(self):
         x = self.screen_rect.centerx
-        dash_length = 12
-        gap_length = 8
+        dash_length = settings.CENTER_LINE_DASH_LENGTH
+        gap_length = settings.CENTER_LINE_GAP_LENGTH
         y = 0
         while y < self.screen_rect.height:
             pygame.draw.line(self.screen, settings.GREY, (x, y),
@@ -145,12 +149,15 @@ class Game:
 
     def _round_over(self, player_that_won):
         self.round_win_sound.play()
-        sleep(0.5)
         if player_that_won == settings.Player.PLAYER_1:
             self.stats.player1_score += 1
         elif player_that_won == settings.Player.PLAYER_2:
             self.stats.player2_score += 1
         self.scoreboard.prep_player_scores()
+        self.state = GameState.ROUND_PAUSE
+        self._round_resume_at = pygame.time.get_ticks() + settings.ROUND_PAUSE_MS
+
+    def _finalize_round(self):
         self.ball.reset()
         self.player1.reset()
         self.player2.reset()
@@ -161,6 +168,8 @@ class Game:
         elif self.stats.player2_score == settings.WINNING_SCORE:
             self.winner = self.player2
             self._game_over()
+        else:
+            self.state = GameState.PLAYING
 
     def _game_over(self):
         self.state = GameState.GAME_OVER

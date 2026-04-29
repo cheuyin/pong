@@ -35,6 +35,10 @@ class Paddle(pygame.sprite.Sprite):
     def draw(self):
         self.screen.blit(self.surface, self.rect)
 
+    def get_hit_offset(self, ball_rect: pygame.Rect) -> float:
+        offset = (ball_rect.centery - self.rect.centery) / (self.height / 2)
+        return max(-1.0, min(1.0, offset))
+
     def moveup(self):
         if self.rect.top > 0:
             self.rect.y -= self.speed

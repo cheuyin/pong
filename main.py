@@ -35,7 +35,7 @@ class Game:
     ball: Ball
     stats: GameStats
     scoreboard: Scoreboard
-    winner: settings.Player
+    winner: Paddle
     game_end_message: pygame.Surface
 
     def __init__(self):
@@ -76,8 +76,10 @@ class Game:
             if selected is None:
                 return
             if GAME_MODES[selected] == "Human vs. Human":
-                self._start_game(HumanPaddle(
-                    self.screen, "right", pygame.K_UP, pygame.K_DOWN))
+                player2 = HumanPaddle(
+                    self.screen, "right", pygame.K_UP, pygame.K_DOWN)
+                player2.name = "Player 2"
+                self._start_game(player2)
             else:
                 self.difficulty_menu.reset()
                 self.state = GameState.MENU_DIFFICULTY
@@ -87,7 +89,9 @@ class Game:
             if selected is None:
                 return
             _, difficulty = DIFFICULTY_OPTIONS[selected]
-            self._start_game(AIPaddle(self.screen, "right", difficulty))
+            player2 = AIPaddle(self.screen, "right", difficulty)
+            player2.name = "AI"
+            self._start_game(player2)
 
         elif self.state == GameState.GAME_OVER:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
@@ -95,6 +99,7 @@ class Game:
 
     def _start_game(self, player2: Paddle):
         self.player1 = HumanPaddle(self.screen, "left", pygame.K_w, pygame.K_s)
+        self.player1.name = "Player 1"
         self.player2 = player2
         self.ball = Ball(self.screen, self.player1, self.player2)
         if isinstance(self.player2, AIPaddle):
@@ -147,12 +152,14 @@ class Game:
             self.stats.player2_score += 1
         self.scoreboard.prep_player_scores()
         self.ball.reset()
+        self.player1.reset()
+        self.player2.reset()
 
         if self.stats.player1_score == settings.WINNING_SCORE:
-            self.winner = settings.Player.PLAYER_1
+            self.winner = self.player1
             self._game_over()
         elif self.stats.player2_score == settings.WINNING_SCORE:
-            self.winner = settings.Player.PLAYER_2
+            self.winner = self.player2
             self._game_over()
 
     def _game_over(self):
@@ -162,6 +169,8 @@ class Game:
     def _reset_game(self):
         self.state = GameState.PLAYING
         self.ball.reset()
+        self.player1.reset()
+        self.player2.reset()
         self.stats.player1_score = 0
         self.stats.player2_score = 0
         self.scoreboard.prep_player_scores()
@@ -170,7 +179,7 @@ class Game:
         winner_message_font = pygame.font.SysFont(
             settings.PRIMARY_FONT, settings.MEDIUM_TEXT)
         winner_message = winner_message_font.render(
-            f"Winner: {self.winner.value}", True, settings.WHITE)
+            f"Winner: {self.winner.name}", True, settings.WHITE)
         play_again_message_font = pygame.font.SysFont(
             settings.PRIMARY_FONT, settings.SMALL_TEXT)
         play_again_message = play_again_message_font.render(
@@ -181,7 +190,7 @@ class Game:
         height = winner_message.get_rect().height + \
             play_again_message.get_rect().height + vertical_gap
         width = max(winner_message.get_rect().width,
-                    play_again_message.get_rect().height)
+                    play_again_message.get_rect().width)
 
         parent = pygame.Surface((width, height))
         winner_message_rect = winner_message.get_rect()

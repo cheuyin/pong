@@ -6,6 +6,7 @@ class Paddle(pygame.sprite.Sprite):
     def __init__(self, screen: pygame.Surface, direction: str, color=None):
         pygame.sprite.Sprite.__init__(self)
 
+        self.name: str = ""
         self.screen = screen
         self.screen_rect = screen.get_rect()
 
@@ -27,6 +28,9 @@ class Paddle(pygame.sprite.Sprite):
 
     def update(self):
         pass
+
+    def reset(self):
+        self.rect.centery = self.screen_rect.centery
 
     def draw(self):
         self.screen.blit(self.surface, self.rect)

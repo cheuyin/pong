@@ -16,6 +16,11 @@ class AIPaddle(Paddle):
         self._target_y = float(self.rect.centery)
         self._prev_ball_dir_x = 0
 
+    def reset(self):
+        super().reset()
+        self._target_y = float(self.rect.centery)
+        self._prev_ball_dir_x = 0
+
     def update(self):
         ball_dir_x = 1 if self.ball.direction.x > 0 else -1
         if ball_dir_x != self._prev_ball_dir_x:

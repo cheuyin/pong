@@ -2,8 +2,6 @@
 
 A from-scratch implementation of the classic arcade game in Python and Pygame, featuring local two-player play and a single-player mode against a tunable AI opponent.
 
-Built without AI coding assistance as a learning exercise in Python, OOP design, and game programming.
-
 ![Pong gameplay](assets/demo.gif)
 
 ## Features
@@ -47,7 +45,7 @@ Built without AI coding assistance as a learning exercise in Python, OOP design,
 ```bash
 git clone https://github.com/<your-username>/pong.git
 cd pong
-python -m venv .venv
+python3 -m venv .venv
 source .venv/bin/activate          # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
@@ -55,7 +53,7 @@ pip install -r requirements.txt
 ### Run
 
 ```bash
-python main.py
+python3 main.py
 ```
 
 ## Project Structure
@@ -82,7 +80,10 @@ pong/
 ## Design Notes
 
 ### Game state machine
-The main loop in [main.py](main.py) drives a four-state machine (`MENU_GAME_MODE`, `MENU_DIFFICULTY`, `PLAYING`, `GAME_OVER`) with event handling and rendering dispatched per state. Adding a new screen (e.g. settings, pause) is a matter of adding a state and a dispatch branch.
+The main loop in [main.py](main.py) drives a five-state machine (`MENU_GAME_MODE`, `MENU_DIFFICULTY`, `PLAYING`, `ROUND_PAUSE`, `GAME_OVER`) with event handling and rendering dispatched per state. Adding a new screen (e.g. settings, pause) is a matter of adding a state and a dispatch branch.
+
+### Non-blocking round transitions
+After a point is scored, the game shows the updated score for half a second before resetting the ball and paddles. This is implemented as a dedicated `ROUND_PAUSE` state with a `pygame.time.get_ticks` deadline rather than a `time.sleep`, so the window stays responsive throughout: quit events, redraws, and OS interactions all keep working during the pause.
 
 ### Paddle inheritance
 `Paddle` is an abstract-ish base class that owns geometry, rendering, and the `get_hit_offset` math used to compute the ball's return angle. `HumanPaddle` reads keyboard state on each `update()`; `AIPaddle` overrides `update()` with its prediction logic. This keeps the ball's collision code agnostic to who's controlling either paddle.

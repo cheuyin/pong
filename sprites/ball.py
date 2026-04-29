@@ -48,29 +48,32 @@ class Ball(pygame.sprite.Sprite):
         if self.player1.rect.colliderect(self.rect):
             if oldRect.bottom <= self.player1.rect.top:
                 self.direction.y *= -1
-                self.y = self.player1.rect.top - self.size
+                self.y = self.player1.rect.top - \
+                    self.size - self.player1.speed
             elif oldRect.top >= self.player1.rect.bottom:
                 self.direction.y *= -1
-                self.y = self.player1.rect.bottom
+                self.y = self.player1.rect.bottom + self.player1.speed
             else:
                 self.direction.x *= -1
         elif self.player2.rect.colliderect(self.rect):
             if oldRect.bottom <= self.player2.rect.top:
                 self.direction.y *= -1
-                self.y = self.player2.rect.top - self.size
+                self.y = self.player2.rect.top - \
+                    self.size - self.player2.speed
             elif oldRect.top >= self.player2.rect.bottom:
                 self.direction.y *= -1
-                self.y = self.player2.rect.bottom
+                self.y = self.player2.rect.bottom + self.player2.speed
             else:
                 self.direction.x *= -1
-        elif self.check_hit_top_bottom_walls():
+        elif self.rect.top <= 0:
             self.direction.y *= -1
+            self.y = 1
+        elif self.rect.bottom >= self.screen_rect.height:
+            self.direction.y *= -1
+            self.y = self.screen_rect.height - self.size
 
         self.rect.x = self.x
         self.rect.y = self.y
-
-    def check_hit_top_bottom_walls(self):
-        return self.rect.top <= 0 or self.rect.bottom >= self.screen_rect.height
 
     def calculate_new_xy(self):
         self.x += self.speed * self.direction.x

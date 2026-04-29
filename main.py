@@ -3,7 +3,8 @@ import sys
 from time import sleep
 import settings
 
-from sprites.paddle import Paddle
+from sprites.human_paddle import HumanPaddle
+from sprites.ai_paddle import AIPaddle
 from sprites.ball import Ball
 from sprites.scoreboard import Scoreboard
 from game_stats import GameStats
@@ -18,10 +19,11 @@ class Game:
         self.screen_rect = self.screen.get_rect()
         self.clock = pygame.time.Clock()
         self.game_active = True
-        self.player1 = Paddle(self.screen, "left")
-        self.player2 = Paddle(self.screen, "right")
+        self.player1 = HumanPaddle(self.screen, "left", pygame.K_w, pygame.K_s)
+        self.player2 = AIPaddle(self.screen, "right", settings.AI_DIFFICULTY)
         self.winner: settings.Player
         self.ball = Ball(self.screen, self.player1, self.player2)
+        self.player2.ball = self.ball
         self.stats = GameStats()
         self.scoreboard = Scoreboard(self.screen, self.stats)
         self.round_win_sound = pygame.mixer.Sound("assets/sounds/round_win.wav")
@@ -39,16 +41,8 @@ class Game:
                         self._reset_game()
 
             if self.game_active:
-                keys = pygame.key.get_pressed()
-                if keys[pygame.K_UP]:
-                    self.player2.moveup()
-                if keys[pygame.K_DOWN]:
-                    self.player2.movedown()
-                if keys[pygame.K_w]:
-                    self.player1.moveup()
-                if keys[pygame.K_s]:
-                    self.player1.movedown()
-
+                self.player1.update()
+                self.player2.update()
                 self.ball.update()
                 self._check_ball_out_of_bounds()
 

@@ -1,16 +1,9 @@
 import pygame
+import settings
 
 
 class Paddle(pygame.sprite.Sprite):
-    """
-    Paddle in a Pong game.
-
-    Parameters:
-    - screen: the game window
-    - direction: either "left" or "right" to represent the left or right paddle
-    """
-
-    def __init__(self, screen: pygame.Surface, direction: str):
+    def __init__(self, screen: pygame.Surface, direction: str, color=None):
         pygame.sprite.Sprite.__init__(self)
 
         self.screen = screen
@@ -19,7 +12,7 @@ class Paddle(pygame.sprite.Sprite):
         self.width = 10
         self.height = 80
         self.speed = 8
-        self.color = "white"
+        self.color = color or settings.WHITE
 
         self.surface = pygame.Surface((self.width, self.height))
         self.surface.fill(self.color)
@@ -31,6 +24,9 @@ class Paddle(pygame.sprite.Sprite):
         elif direction == "right":
             self.rect.center = self.screen_rect.center
             self.rect.x = self.screen_rect.width - 50
+
+    def update(self):
+        pass
 
     def draw(self):
         self.screen.blit(self.surface, self.rect)

@@ -8,7 +8,7 @@ class Scoreboard:
         self.window = window
         self.window_rect = window.get_rect()
         self.text_color = settings.LIGHT_GREY
-        self.font = pygame.font.SysFont(None, settings.LARGE_TEXT)
+        self.font = settings.LARGE_TEXT
         self.stats = stats
 
         self.prep_player_scores()

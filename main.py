@@ -48,7 +48,7 @@ class Game:
         self.round_win_sound = pygame.mixer.Sound(
             "assets/sounds/round_win.wav")
 
-        self.opponent_menu = Menu(self.screen, "Game Mode", GAME_MODES)
+        self.opponent_menu = Menu(self.screen, "PONG", GAME_MODES)
         self.difficulty_menu = Menu(
             self.screen, "AI Difficulty", [label for label, _ in DIFFICULTY_OPTIONS])
         self.state = GameState.MENU_GAME_MODE
@@ -176,12 +176,10 @@ class Game:
         self.scoreboard.prep_player_scores()
 
     def _prep_game_end_message(self):
-        winner_message_font = pygame.font.SysFont(
-            settings.PRIMARY_FONT, settings.MEDIUM_TEXT)
+        winner_message_font = settings.SMALL_TEXT
         winner_message = winner_message_font.render(
             f"Winner: {self.winner.name}", True, settings.WHITE)
-        play_again_message_font = pygame.font.SysFont(
-            settings.PRIMARY_FONT, settings.SMALL_TEXT)
+        play_again_message_font = settings.SMALL_TEXT
         play_again_message = play_again_message_font.render(
             "Press space to restart", True, settings.GREY)
 

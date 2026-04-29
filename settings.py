@@ -1,11 +1,13 @@
 from enum import Enum
 
+import pygame
 
+MENU_SELECTION_COLOR = (255, 215, 0)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREY = (220, 220, 220)
 LIGHT_GREY = (30, 30, 30)
-AI_PADDLE_COLOR = (220, 80, 80)
+AI_PADDLE_COLOR = (255, 215, 0)
 
 
 SCREEN_WIDTH = 800
@@ -17,11 +19,13 @@ WINNING_SCORE = 3
 BALL_INITIAL_SPEED = 8
 BALL_SPEED_INCREMENT = 0.5
 
-PRIMARY_FONT = None
+PRIMARY_FONT_FILE = "assets/fonts/Jersey10-Regular.ttf"
 
-SMALL_TEXT = 24
-MEDIUM_TEXT = 48
-LARGE_TEXT = 64
+pygame.font.init()
+
+SMALL_TEXT = pygame.font.Font(PRIMARY_FONT_FILE, 24)
+MEDIUM_TEXT = pygame.font.Font(PRIMARY_FONT_FILE, 48)
+LARGE_TEXT = pygame.font.Font(PRIMARY_FONT_FILE, 64)
 
 
 class Player(Enum):

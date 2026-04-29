@@ -9,9 +9,9 @@ class Menu:
         self.title = title
         self.labels = labels
         self.selected_index = 0
-        self.title_font = pygame.font.SysFont(settings.PRIMARY_FONT, settings.LARGE_TEXT)
-        self.option_font = pygame.font.SysFont(settings.PRIMARY_FONT, settings.MEDIUM_TEXT)
-        self.hint_font = pygame.font.SysFont(settings.PRIMARY_FONT, settings.SMALL_TEXT)
+        self.title_font = settings.LARGE_TEXT
+        self.option_font = settings.MEDIUM_TEXT
+        self.hint_font = settings.SMALL_TEXT
 
     def reset(self):
         self.selected_index = 0
@@ -31,7 +31,8 @@ class Menu:
     def draw(self):
         self.screen.fill(settings.SCREEN_BG_COLOR)
 
-        title_surface = self.title_font.render(self.title, True, settings.WHITE)
+        title_surface = self.title_font.render(
+            self.title, True, settings.WHITE)
         title_rect = title_surface.get_rect()
         title_rect.centerx = self.screen_rect.centerx
         title_rect.top = 100
@@ -40,7 +41,7 @@ class Menu:
         y = title_rect.bottom + 60
         for i, label in enumerate(self.labels):
             selected = i == self.selected_index
-            color = settings.AI_PADDLE_COLOR if selected else settings.WHITE
+            color = settings.MENU_SELECTION_COLOR if selected else settings.WHITE
             prefix = "> " if selected else "  "
             surface = self.option_font.render(f"{prefix}{label}", True, color)
             rect = surface.get_rect()

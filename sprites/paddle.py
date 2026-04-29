@@ -10,9 +10,9 @@ class Paddle(pygame.sprite.Sprite):
         self.screen = screen
         self.screen_rect = screen.get_rect()
 
-        self.width = 10
-        self.height = 80
-        self.speed = 8
+        self.width = settings.PADDLE_WIDTH
+        self.height = settings.PADDLE_HEIGHT
+        self.speed = settings.PADDLE_SPEED
         self.color = color or settings.WHITE
 
         self.surface = pygame.Surface((self.width, self.height))
@@ -21,10 +21,10 @@ class Paddle(pygame.sprite.Sprite):
 
         if direction == "left":
             self.rect.center = self.screen_rect.center
-            self.rect.x = 50
+            self.rect.x = settings.PADDLE_EDGE_OFFSET
         elif direction == "right":
             self.rect.center = self.screen_rect.center
-            self.rect.x = self.screen_rect.width - 50
+            self.rect.x = self.screen_rect.width - settings.PADDLE_EDGE_OFFSET
 
     def update(self):
         pass

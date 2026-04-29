@@ -14,7 +14,7 @@ class Ball(pygame.sprite.Sprite):
         self.player1 = player1
         self.player2 = player2
 
-        self.size = 20
+        self.size = settings.BALL_SIZE
         self.x = 0
         self.y = 0
         self.initial_speed = settings.BALL_INITIAL_SPEED
@@ -77,7 +77,7 @@ class Ball(pygame.sprite.Sprite):
                 self.y = paddle.rect.bottom
         else:  # Ball hits the face of the paddle
             offset = paddle.get_hit_offset(self.rect)
-            angle = offset * math.radians(75)
+            angle = offset * math.radians(settings.BALL_MAX_DEFLECTION_DEGREES)
             x_dir = 1 if self.direction.x < 0 else -1
             self.direction = pygame.Vector2(x_dir * math.cos(angle), math.sin(angle))
             if self.rect.centerx < paddle.rect.centerx:

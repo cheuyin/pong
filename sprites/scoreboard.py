@@ -23,12 +23,12 @@ class Scoreboard:
             player_2_score_str, True, self.text_color)
 
         self.player_1_score_img_rect = self.player_1_score_img.get_rect()
-        self.player_1_score_img_rect.centerx = self.window_rect.centerx - 100
-        self.player_1_score_img_rect.top += 20
+        self.player_1_score_img_rect.centerx = self.window_rect.centerx - settings.SCOREBOARD_CENTER_OFFSET
+        self.player_1_score_img_rect.top += settings.SCOREBOARD_TOP_PADDING
 
         self.player_2_score_img_rect = self.player_2_score_img.get_rect()
-        self.player_2_score_img_rect.centerx = self.window_rect.centerx + 100
-        self.player_2_score_img_rect.top += 20
+        self.player_2_score_img_rect.centerx = self.window_rect.centerx + settings.SCOREBOARD_CENTER_OFFSET
+        self.player_2_score_img_rect.top += settings.SCOREBOARD_TOP_PADDING
 
     def show_score(self):
         self.window.blit(self.player_1_score_img,
